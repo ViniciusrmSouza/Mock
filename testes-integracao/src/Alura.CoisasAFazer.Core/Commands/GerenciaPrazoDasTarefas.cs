@@ -7,9 +7,9 @@ namespace Alura.CoisasAFazer.Core.Commands
     /// </summary>
     public class GerenciaPrazoDasTarefas
     {
-        public GerenciaPrazoDasTarefas()
+        public GerenciaPrazoDasTarefas(DateTime date)
         {
-            DataHoraAtual = DateTime.Now;
+            DataHoraAtual = date;
         }
 
         public DateTime DataHoraAtual { get; }
