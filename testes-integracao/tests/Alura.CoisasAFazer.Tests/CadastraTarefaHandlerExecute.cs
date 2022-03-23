@@ -5,6 +5,7 @@ using Alura.CoisasAFazer.Core.Models;
 using Alura.CoisasAFazer.Infrastructure;
 using Alura.CoisasAFazer.Services.Handlers;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Xunit;
 
 namespace Alura.CoisasAFazer.Tests
@@ -23,10 +24,11 @@ namespace Alura.CoisasAFazer.Tests
             var handler = new CadastraTarefaHandler(repo); 
 
             //Act
-            var result = handler.Execute(command);
+            handler.Execute(command);
             
             //Assert
-            Assert.False(result.IsSuccess);
+            var tarefa = repo.ObtemTarefas(t => t.Titulo == "Estudar Mock");
+            Assert.NotNull(tarefa);
         }
 
         [Fact]
@@ -35,13 +37,20 @@ namespace Alura.CoisasAFazer.Tests
             //Arrange
             var command = new CadastraTarefa("Estudar Mock", new Categoria("Estudo"), new DateTime(2022, 03, 15));
 
-            var options = new DbContextOptionsBuilder<DbTarefasContext>().UseInMemoryDatabase("DbTeste").Options;
-            var context = new DbTarefasContext(options);
-            var repo = new RepositorioTarefa(context);
+            var mock = new Mock<IRepositorioTarefas>();//Objeto
+            mock.Setup(r => r.IncluirTarefas(It.IsAny<Tarefa[]>())).Throws(new Exception("Houve um erro"));
+            //Configura a execução do objeto
+            //Para qualquer valor recebido como parametro lance exception
+            
+            var repo = mock.Object;
+
             var handler = new CadastraTarefaHandler(repo); 
 
             //Act
-            handler.Execute(command);
+            var result = handler.Execute(command);
+            
+            //Assert
+            Assert.False(result.IsSuccess);
         }
     }
 }
