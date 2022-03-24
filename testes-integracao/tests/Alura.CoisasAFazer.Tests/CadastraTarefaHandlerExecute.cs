@@ -39,7 +39,7 @@ namespace Alura.CoisasAFazer.Tests
 
             var mock = new Mock<IRepositorioTarefas>();//Objeto
             mock.Setup(r => r.IncluirTarefas(It.IsAny<Tarefa[]>())).Throws(new Exception("Houve um erro"));
-            //Configura a execução do objeto
+            //Configura a execução do metodo
             //Para qualquer valor recebido como parametro lance exception
             
             var repo = mock.Object;
